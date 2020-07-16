@@ -60,5 +60,12 @@
 			<scope>test</scope>
 		</dependency>
 		<!-- test end -->
+
+		<!-- 依赖Groovy，Activiti的Script Task为groovy时需要第三方的支持 -->
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy</artifactId>
+			<version>1.8.6</version>
+		</dependency>
 	</dependencies>
 </project>

@@ -1,0 +1,3 @@
+com\xiaojihua\activiti\util\ActivitiUtils.class
+com\xiaojihua\activiti\web\base\AbstractController.class
+com\xiaojihua\activiti\web\chapter5\deployment\DeploymentController.class
