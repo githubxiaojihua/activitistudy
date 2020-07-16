@@ -9,13 +9,10 @@
 		<artifactId>activitistudy</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>activitistudy-oa-manager</artifactId>
+	<artifactId>activitistudy-oa-form</artifactId>
 	<packaging>war</packaging>
-	<name>activitistudy-oa-manager Maven Webapp</name>
-	<url>http://maven.apache.org</url>
-	<!-- 依赖定义 -->
+	<name>activitistudy-oa-form Maven Webapp</name>
 	<dependencies>
-
 		<!-- activit begin -->
 		<dependency>
 			<groupId>org.activiti</groupId>
@@ -112,31 +109,24 @@
 			<version>${log4j.version}</version>
 		</dependency>
 		<!-- LOGGING end -->
+
+		<dependency>
+			<groupId>org.dbunit</groupId>
+			<artifactId>dbunit</artifactId>
+			<version>2.4.8</version>
+		</dependency>
+
+		<!-- 单元测试-Junit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.10</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 	<build>
-		<finalName>activitistudy-oa-manager</finalName>
+		<finalName>activitistudy-oa-form</finalName>
 		<plugins>
-			<!-- compiler插件, 设定JDK版本 -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.0</version>
-				<configuration>
-					<!-- Activiti最低要求JDK1.5 -->
-					<source>1.6</source>
-					<target>1.6</target>
-					<showWarnings>true</showWarnings>
-				</configuration>
-			</plugin>
-			<!-- resource插件, 设定编码，防止中文乱码 -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.5</version>
-				<configuration>
-					<encoding>${project.build.sourceEncoding}</encoding>
-				</configuration>
-			</plugin>
 			<!-- 配置Tomcat插件 -->
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
