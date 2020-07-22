@@ -73,30 +73,19 @@ public class ProcessDefinitionController extends AbstractController {
 
     @SuppressWarnings("unchecked")
     @RequestMapping(value = "process-instance/start/{processDefinitionId}")
-    public String startProcessInstance(@PathVariable("processDefinitionId") String pdid, HttpServletRequest request, RedirectAttributes redirectAttributes) {
-
-        ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionId(pdid).singleResult();
-        boolean hasStartFormKey = processDefinition.hasStartFormKey();
+    public String startProcessInstance(@PathVariable("processDefinitionId") String pdid, HttpServletRequest request) {
 
         Map<String, String> formValues = new HashMap<String, String>();
 
-        if (hasStartFormKey) { // formkey表单
-            Map<String, String[]> parameterMap = request.getParameterMap();
-            Set<Entry<String, String[]>> entrySet = parameterMap.entrySet();
-            for (Entry<String, String[]> entry : entrySet) {
-                String key = entry.getKey();
-                formValues.put(key, entry.getValue()[0]);
-            }
-        } else { // 动态表单
-            // 先读取表单字段在根据表单字段的ID读取请求参数值
-            StartFormData formData = formService.getStartFormData(pdid);
+        // 动态表单
+        // 先读取表单字段在根据表单字段的ID读取请求参数值
+        StartFormData formData = formService.getStartFormData(pdid);
 
-            // 从请求中获取表单字段的值
-            List<FormProperty> formProperties = formData.getFormProperties();
-            for (FormProperty formProperty : formProperties) {
-                String value = request.getParameter(formProperty.getId());
-                formValues.put(formProperty.getId(), value);
-            }
+        // 从请求中获取表单字段的值，并放入Map中
+        List<FormProperty> formProperties = formData.getFormProperties();
+        for (FormProperty formProperty : formProperties) {
+            String value = request.getParameter(formProperty.getId());
+            formValues.put(formProperty.getId(), value);
         }
 
         // 获取当前登录的用户
@@ -105,13 +94,52 @@ public class ProcessDefinitionController extends AbstractController {
         if (user == null || StringUtils.isBlank(user.getId())) {
             return "redirect:/login?timeout=true";
         }
+        // 设置流程启动人的信息，可以配合 activiti:initiator使用
         identityService.setAuthenticatedUserId(user.getId());
 
         // 提交表单字段并启动一个新的流程实例
         ProcessInstance processInstance = formService.submitStartFormData(pdid, formValues);
         logger.debug("start a processinstance: {}", processInstance);
-        redirectAttributes.addFlashAttribute("message", "流程已启动，实例ID：" + processInstance.getId());
         return "redirect:/chapter5/process-list";
     }
+    
+	/*
+	 * @SuppressWarnings("unchecked")
+	 * 
+	 * @RequestMapping(value = "process-instance/start/{processDefinitionId}")
+	 * public String startProcessInstance(@PathVariable("processDefinitionId")
+	 * String pdid, HttpServletRequest request, RedirectAttributes
+	 * redirectAttributes) {
+	 * 
+	 * ProcessDefinition processDefinition =
+	 * repositoryService.createProcessDefinitionQuery().processDefinitionId(pdid).
+	 * singleResult(); boolean hasStartFormKey =
+	 * processDefinition.hasStartFormKey();
+	 * 
+	 * Map<String, String> formValues = new HashMap<String, String>();
+	 * 
+	 * if (hasStartFormKey) { // formkey表单 Map<String, String[]> parameterMap =
+	 * request.getParameterMap(); Set<Entry<String, String[]>> entrySet =
+	 * parameterMap.entrySet(); for (Entry<String, String[]> entry : entrySet) {
+	 * String key = entry.getKey(); formValues.put(key, entry.getValue()[0]); } }
+	 * else { // 动态表单 // 先读取表单字段在根据表单字段的ID读取请求参数值 StartFormData formData =
+	 * formService.getStartFormData(pdid);
+	 * 
+	 * // 从请求中获取表单字段的值 List<FormProperty> formProperties =
+	 * formData.getFormProperties(); for (FormProperty formProperty :
+	 * formProperties) { String value = request.getParameter(formProperty.getId());
+	 * formValues.put(formProperty.getId(), value); } }
+	 * 
+	 * // 获取当前登录的用户 User user = UserUtil.getUserFromSession(request.getSession());
+	 * // 用户未登录不能操作，实际应用使用权限框架实现，例如Spring Security、Shiro等 if (user == null ||
+	 * StringUtils.isBlank(user.getId())) { return "redirect:/login?timeout=true"; }
+	 * identityService.setAuthenticatedUserId(user.getId());
+	 * 
+	 * // 提交表单字段并启动一个新的流程实例 ProcessInstance processInstance =
+	 * formService.submitStartFormData(pdid, formValues);
+	 * logger.debug("start a processinstance: {}", processInstance);
+	 * redirectAttributes.addFlashAttribute("message", "流程已启动，实例ID：" +
+	 * processInstance.getId()); return "redirect:/chapter5/process-list"; }
+	 */
 
 }

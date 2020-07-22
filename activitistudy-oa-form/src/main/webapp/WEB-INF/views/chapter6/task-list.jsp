@@ -41,9 +41,11 @@
 					<td>${task.createTime }</td>
 					<td>${task.assignee }</td>
 					<td>
+					    <!-- 当办理人属性为空时任务需要签收 -->
 						<c:if test="${empty task.assignee }">
 							<a class="btn" href="claim/${task.id}"><i class="icon-eye-open"></i>签收</a>
 						</c:if>
+						<!-- 当办理人属性不为空时可以办理业务 -->
 						<c:if test="${not empty task.assignee }">
 							<a class="btn" href="getform/${task.id}"><i class="icon-user"></i>办理</a>
 						</c:if>

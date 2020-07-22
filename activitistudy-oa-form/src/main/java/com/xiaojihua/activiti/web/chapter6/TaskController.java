@@ -27,95 +27,131 @@ import java.util.Map.Entry;
 @RequestMapping(value = "/chapter6")
 public class TaskController extends AbstractController {
 
-    private static String TASK_LIST = "redirect:/chapter6/task/list";
+	private static String TASK_LIST = "redirect:/chapter6/task/list";
 
-    /**
-     * 读取启动流程的表单字段
-     */
-    @RequestMapping(value = "task/list")
-    public ModelAndView todoTasks(HttpSession session) throws Exception {
-        String viewName = "chapter6/task-list";
-        ModelAndView mav = new ModelAndView(viewName);
-        User user = UserUtil.getUserFromSession(session);
+	/**
+	 * 读取启动流程的表单字段
+	 */
+	@RequestMapping(value = "task/list")
+	public ModelAndView todoTasks(HttpSession session) throws Exception {
+		String viewName = "chapter6/task-list";
+		ModelAndView mav = new ModelAndView(viewName);
+		User user = UserUtil.getUserFromSession(session);
 
-        /*// 读取直接分配给当前人或者已经签收的任务
-        List<Task> doingTasks = taskService.createTaskQuery().taskAssignee(user.getId()).list();
+		/*
+		 * // 读取直接分配给当前人或者已经签收的任务 List<Task> doingTasks =
+		 * taskService.createTaskQuery().taskAssignee(user.getId()).list();
+		 * 
+		 * // 等待签收的任务 List<Task> waitingClaimTasks =
+		 * taskService.createTaskQuery().taskCandidateUser(user.getId()).list();
+		 * 
+		 * // 合并两种任务 List<Task> allTasks = new ArrayList<Task>();
+		 * allTasks.addAll(doingTasks); allTasks.addAll(waitingClaimTasks);
+		 */
 
-        // 等待签收的任务
-        List<Task> waitingClaimTasks = taskService.createTaskQuery().taskCandidateUser(user.getId()).list();
+		// 5.16版本可以使用一下代码待办查询
+		List<Task> tasks = taskService.createTaskQuery().taskCandidateOrAssigned(user.getId()).list();
 
-        // 合并两种任务
-        List<Task> allTasks = new ArrayList<Task>();
-        allTasks.addAll(doingTasks);
-        allTasks.addAll(waitingClaimTasks);*/
+		mav.addObject("tasks", tasks);
+		return mav;
+	}
 
-        // 5.16版本可以使用一下代码待办查询
-        List<Task> tasks = taskService.createTaskQuery().taskCandidateOrAssigned(user.getId()).list();
+	/**
+	 * 签收任务
+	 */
+	@RequestMapping(value = "task/claim/{id}")
+	public String claim(@PathVariable("id") String taskId, HttpSession session) {
+		String userId = UserUtil.getUserFromSession(session).getId();
+		taskService.claim(taskId, userId);
+		return TASK_LIST;
+	}
 
-        mav.addObject("tasks", tasks);
-        return mav;
-    }
+	/**
+	 * 签收任务
+	 */
+	/*
+	 * @RequestMapping(value = "task/claim/{id}") public String
+	 * claim(@PathVariable("id") String taskId, HttpSession session,
+	 * RedirectAttributes redirectAttributes) { String userId =
+	 * UserUtil.getUserFromSession(session).getId(); taskService.claim(taskId,
+	 * userId); redirectAttributes.addFlashAttribute("message", "任务已签收"); return
+	 * TASK_LIST; }
+	 */
 
-    /**
-     * 签收任务
-     */
-    @RequestMapping(value = "task/claim/{id}")
-    public String claim(@PathVariable("id") String taskId, HttpSession session, RedirectAttributes redirectAttributes) {
-        String userId = UserUtil.getUserFromSession(session).getId();
-        taskService.claim(taskId, userId);
-        redirectAttributes.addFlashAttribute("message", "任务已签收");
-        return TASK_LIST;
-    }
+	/**
+	 * 读取用户任务的表单字段
+	 */
+	@RequestMapping(value = "task/getform/{taskId}")
+	public ModelAndView readTaskForm(@PathVariable("taskId") String taskId) throws Exception {
+		String viewName = "chapter6/task-form";
+		ModelAndView mav = new ModelAndView(viewName);
+		TaskFormData taskFormData = formService.getTaskFormData(taskId);
+		mav.addObject("taskFormData", taskFormData);
+		return mav;
+	}
 
-    /**
-     * 读取用户任务的表单字段
-     */
-    @RequestMapping(value = "task/getform/{taskId}")
-    public ModelAndView readTaskForm(@PathVariable("taskId") String taskId) throws Exception {
-        String viewName = "chapter6/task-form";
-        ModelAndView mav = new ModelAndView(viewName);
-        TaskFormData taskFormData = formService.getTaskFormData(taskId);
-        if (taskFormData.getFormKey() != null) {
-            Object renderedTaskForm = formService.getRenderedTaskForm(taskId);
-            Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
-            mav.addObject("task", task);
-            mav.addObject("taskFormData", renderedTaskForm);
-            mav.addObject("hasFormKey", true);
-        } else {
-            mav.addObject("taskFormData", taskFormData);
-        }
-        return mav;
-    }
+	/**
+	 * 读取用户任务的表单字段
+	 */
+	/*
+	 * @RequestMapping(value = "task/getform/{taskId}") public ModelAndView
+	 * readTaskForm(@PathVariable("taskId") String taskId) throws Exception { String
+	 * viewName = "chapter6/task-form"; ModelAndView mav = new
+	 * ModelAndView(viewName); TaskFormData taskFormData =
+	 * formService.getTaskFormData(taskId); if (taskFormData.getFormKey() != null) {
+	 * Object renderedTaskForm = formService.getRenderedTaskForm(taskId); Task task
+	 * = taskService.createTaskQuery().taskId(taskId).singleResult();
+	 * mav.addObject("task", task); mav.addObject("taskFormData", renderedTaskForm);
+	 * mav.addObject("hasFormKey", true); } else { mav.addObject("taskFormData",
+	 * taskFormData); } return mav; }
+	 */
 
-    /**
-     * 读取启动流程的表单字段
-     */
-    @SuppressWarnings("unchecked")
-    @RequestMapping(value = "task/complete/{taskId}")
-    public String completeTask(@PathVariable("taskId") String taskId, HttpServletRequest request) throws Exception {
-        TaskFormData taskFormData = formService.getTaskFormData(taskId);
-        String formKey = taskFormData.getFormKey();
-        // 从请求中获取表单字段的值
-        List<FormProperty> formProperties = taskFormData.getFormProperties();
-        Map<String, String> formValues = new HashMap<String, String>();
+	/**
+	 * 读取启动流程的表单字段
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "task/complete/{taskId}")
+	public String completeTask(@PathVariable("taskId") String taskId, HttpServletRequest request) throws Exception {
+		TaskFormData taskFormData = formService.getTaskFormData(taskId);
+		// 从请求中获取表单字段的值，并保存到活动表单对应的属性中
+		List<FormProperty> formProperties = taskFormData.getFormProperties();
+		Map<String, String> formValues = new HashMap<String, String>();
 
-        if (StringUtils.isNotBlank(formKey)) { // formkey表单
-            Map<String, String[]> parameterMap = request.getParameterMap();
-            Set<Entry<String, String[]>> entrySet = parameterMap.entrySet();
-            for (Entry<String, String[]> entry : entrySet) {
-                String key = entry.getKey();
-                formValues.put(key, entry.getValue()[0]);
-            }
-        } else { // 动态表单
-            for (FormProperty formProperty : formProperties) {
-                if (formProperty.isWritable()) {
-                    String value = request.getParameter(formProperty.getId());
-                    formValues.put(formProperty.getId(), value);
-                }
-            }
-        }
-        formService.submitTaskFormData(taskId, formValues);
-        return TASK_LIST;
-    }
+		for (FormProperty formProperty : formProperties) {
+			//排除当前任务表单中不可写的字段
+			if (formProperty.isWritable()) {
+				String value = request.getParameter(formProperty.getId());
+				formValues.put(formProperty.getId(), value);
+			}
+		}
+		//提交用户任务表单并完成任务 
+		formService.submitTaskFormData(taskId, formValues);
+		return TASK_LIST;
+	}
+
+	/**
+	 * 读取启动流程的表单字段
+	 */
+	/*
+	 * @SuppressWarnings("unchecked")
+	 * 
+	 * @RequestMapping(value = "task/complete/{taskId}") public String
+	 * completeTask(@PathVariable("taskId") String taskId, HttpServletRequest
+	 * request) throws Exception { TaskFormData taskFormData =
+	 * formService.getTaskFormData(taskId); String formKey =
+	 * taskFormData.getFormKey(); // 从请求中获取表单字段的值 List<FormProperty> formProperties
+	 * = taskFormData.getFormProperties(); Map<String, String> formValues = new
+	 * HashMap<String, String>();
+	 * 
+	 * if (StringUtils.isNotBlank(formKey)) { // formkey表单 Map<String, String[]>
+	 * parameterMap = request.getParameterMap(); Set<Entry<String, String[]>>
+	 * entrySet = parameterMap.entrySet(); for (Entry<String, String[]> entry :
+	 * entrySet) { String key = entry.getKey(); formValues.put(key,
+	 * entry.getValue()[0]); } } else { // 动态表单 for (FormProperty formProperty :
+	 * formProperties) { if (formProperty.isWritable()) { String value =
+	 * request.getParameter(formProperty.getId());
+	 * formValues.put(formProperty.getId(), value); } } }
+	 * formService.submitTaskFormData(taskId, formValues); return TASK_LIST; }
+	 */
 
 }
