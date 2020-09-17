@@ -62,6 +62,11 @@
 							data-date-format="${fn:toLowerCase(datePattern)}" />
 					</div>
 				</c:if>
+				
+				<%-- Javascript --%>
+				<c:if test="${fp.type.name == 'javascript'}">
+					<script type="text/javascript">${fp.value};</script>
+				</c:if>
 			</div>
 		</c:forEach>
 

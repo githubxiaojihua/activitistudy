@@ -125,6 +125,9 @@
 		</dependency>
 	</dependencies>
 	<build>
+		<!-- 设置目标文件的名称，默认为groupid+atifitctID+version
+		      打包的文件名会与此处一致。并不影响在下面tomcat7的访问路径，下面的访问路径是/
+		 -->
 		<finalName>activitistudy-oa-form</finalName>
 		<plugins>
 			<!-- 配置Tomcat插件 -->

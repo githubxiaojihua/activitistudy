@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans
+				http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="processEngineConfiguration" class="org.activiti.engine.impl.cfg.StandaloneInMemProcessEngineConfiguration">
+		<property name="databaseSchemaUpdate" value="true"/>
+		<!-- 要保存流程中产生的变量需要设置history为full，否则只会保存表单字段。
+			 配置成full之后引擎在保存表单字段的同时会复制一份经过转换的值，并以字段的ID为变量名存储到数据库中，
+			 还有就是在流程运转过程中临时设置的变量如execution.setVirable()
+		 -->
+		<property name="history" value="full"/>
+		
+		<!-- 自定义表单字段类型 -->
+		<property name="customFormTypes">
+			<list>
+				<bean class="com.xiaojihua.activiti.chapter6.form.JavascriptFormType" />
+			</list>
+		</property>
+		
+		<!-- 自定义表单引擎 -->
+		<property name="customFormEngines">
+			<list>
+				<bean class="com.xiaojihua.activiti.chapter6.form.MyFormEngine" />
+			</list>
+		</property>
+	</bean>
+</beans>
