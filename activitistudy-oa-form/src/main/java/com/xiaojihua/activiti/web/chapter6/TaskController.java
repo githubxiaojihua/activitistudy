@@ -79,32 +79,36 @@ public class TaskController extends AbstractController {
 	 */
 
 	/**
-	 * 读取用户任务的表单字段
-	 */
-	@RequestMapping(value = "task/getform/{taskId}")
-	public ModelAndView readTaskForm(@PathVariable("taskId") String taskId) throws Exception {
-		String viewName = "chapter6/task-form";
-		ModelAndView mav = new ModelAndView(viewName);
-		TaskFormData taskFormData = formService.getTaskFormData(taskId);
-		mav.addObject("taskFormData", taskFormData);
-		return mav;
-	}
-
-	/**
-	 * 读取用户任务的表单字段
+	 * 读取用户任务的表单字段-----仅支持动态表单
 	 */
 	/*
 	 * @RequestMapping(value = "task/getform/{taskId}") public ModelAndView
 	 * readTaskForm(@PathVariable("taskId") String taskId) throws Exception { String
 	 * viewName = "chapter6/task-form"; ModelAndView mav = new
 	 * ModelAndView(viewName); TaskFormData taskFormData =
-	 * formService.getTaskFormData(taskId); if (taskFormData.getFormKey() != null) {
-	 * Object renderedTaskForm = formService.getRenderedTaskForm(taskId); Task task
-	 * = taskService.createTaskQuery().taskId(taskId).singleResult();
-	 * mav.addObject("task", task); mav.addObject("taskFormData", renderedTaskForm);
-	 * mav.addObject("hasFormKey", true); } else { mav.addObject("taskFormData",
-	 * taskFormData); } return mav; }
+	 * formService.getTaskFormData(taskId); mav.addObject("taskFormData",
+	 * taskFormData); return mav; }
 	 */
+
+	/**
+     * 读取用户任务的表单字段
+     */
+    @RequestMapping(value = "task/getform/{taskId}")
+    public ModelAndView readTaskForm(@PathVariable("taskId") String taskId) throws Exception {
+        String viewName = "chapter6/task-form";
+        ModelAndView mav = new ModelAndView(viewName);
+        TaskFormData taskFormData = formService.getTaskFormData(taskId);
+        if (taskFormData.getFormKey() != null) {
+            Object renderedTaskForm = formService.getRenderedTaskForm(taskId);
+            Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+            mav.addObject("task", task);
+            mav.addObject("taskFormData", renderedTaskForm);
+            mav.addObject("hasFormKey", true);
+        } else {
+            mav.addObject("taskFormData", taskFormData);
+        }
+        return mav;
+    }
 
 	/**
 	 * 读取启动流程的表单字段

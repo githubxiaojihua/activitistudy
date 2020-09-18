@@ -21,7 +21,7 @@ import static org.junit.Assert.*;
 
 import com.xiaojihua.activitistudy.AbstractTest;
 
-public class LeaveDynamicFormTest extends AbstractTest {
+public class C01LeaveDynamicFormTest extends AbstractTest {
 
 	@Test
     @Deployment(resources = "chapter6/dynamic-form/leave.bpmn")
