@@ -28,7 +28,8 @@
 		<module>activitistudy-helloworld</module>
 		<module>activitistudy-oa-manager</module>
     <module>activitistudy-oa-form</module>
-  </modules>
+    <module>activitistudy-chapter7-spring</module>
+	</modules>
 
 	<build>
 		<finalName>${project.artifactId}</finalName>
