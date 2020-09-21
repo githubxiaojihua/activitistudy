@@ -11,7 +11,9 @@ public class TaskAssigneeListener implements TaskListener, Serializable {
 
     @Override
     public void notify(DelegateTask delegateTask) {
+    	System.out.println(this.getClass().getSimpleName() + "开始");
         System.out.println(delegateTask.getEventName() + "，任务分配给：" + delegateTask.getAssignee());
+        System.out.println(this.getClass().getSimpleName() + "结束");
     }
 
 }

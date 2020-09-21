@@ -19,10 +19,12 @@ public class CreateTaskListener implements TaskListener {
 
     @Override
     public void notify(DelegateTask delegateTask) {
+        System.out.println(this.getClass().getSimpleName() + "开始");
         System.out.println(task.getValue(delegateTask));
         delegateTask.setVariable("setInTaskCreate", delegateTask.getEventName() + ", " + content.getValue(delegateTask));
         System.out.println(delegateTask.getEventName() + "，任务分配给：" + delegateTask.getAssignee());
         delegateTask.setAssignee("jenny");
+        System.out.println(this.getClass().getSimpleName() + "结束");
     }
 
   /*
