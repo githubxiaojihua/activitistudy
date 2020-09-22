@@ -29,6 +29,7 @@
 		<module>activitistudy-oa-manager</module>
     <module>activitistudy-oa-form</module>
     <module>activitistudy-chapter7-spring</module>
+    <module>activitistudy-chapter7-springboot</module>
 	</modules>
 
 	<build>
