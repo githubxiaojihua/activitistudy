@@ -172,6 +172,10 @@
 	</dependencies>
   <!-- 编译时一些插件依赖 -->
 	<build>
+	<!-- 设置目标文件的名称，默认为groupid+atifitctID+version
+		      打包的文件名会与此处一致。并不影响在下面tomcat7的访问路径，下面的访问路径是/
+		 -->
+		<finalName>activitistudy-chapter7-spring</finalName>
 		<plugins>
 			<!-- compiler插件, 设定JDK版本 -->
 			<plugin>
@@ -195,16 +199,17 @@
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 			</plugin>
-
-			<!-- jetty插件, 设定context path与spring profile -->
+			
+			<!-- 配置Tomcat插件 -->
 			<plugin>
-				<groupId>org.mortbay.jetty</groupId>
-				<artifactId>jetty-maven-plugin</artifactId>
-				<version>${jetty.version}</version>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.2</version>
 				<configuration>
-					<webAppConfig>
-						<contextPath>/${project.artifactId}</contextPath>
-					</webAppConfig>
+					<!-- 前台启动端口:从9000开始 -->
+					<port>8080</port>
+					<!-- /把项目发布tomcat服务器ROOT目录下. -->
+					<path>/</path>
 				</configuration>
 			</plugin>
 		</plugins>
