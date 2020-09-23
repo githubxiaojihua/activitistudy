@@ -30,7 +30,8 @@
     <module>activitistudy-oa-form</module>
     <module>activitistudy-chapter7-spring</module>
     <module>activitistudy-chapter7-springboot</module>
-	</modules>
+    <module>activitistudy-chapter8-mail</module>
+  </modules>
 
 	<build>
 		<finalName>${project.artifactId}</finalName>
