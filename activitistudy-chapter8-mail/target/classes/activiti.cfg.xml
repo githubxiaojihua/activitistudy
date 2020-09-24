@@ -8,6 +8,8 @@
 		<property name="jdbcDriver" value="org.h2.Driver" />
 		<property name="jdbcUsername" value="sa" />
 		<property name="jdbcPassword" value="" />
+		<!-- 这里与教程中的不一样使用虚拟机中邮件服务器的地址  -->
+		<property name="mailServerHost" value="10.0.20.106"/>
 		<property name="mailServerPort" value="2025"/>
 
 		<property name="databaseSchemaUpdate" value="true" />

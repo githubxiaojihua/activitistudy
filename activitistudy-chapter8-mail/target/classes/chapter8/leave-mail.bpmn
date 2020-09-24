@@ -91,7 +91,7 @@
           <activiti:expression>${to}</activiti:expression>
         </activiti:field>
         <activiti:field name="from">
-          <activiti:string><![CDATA[noreply@localhost]]></activiti:string>
+          <activiti:string><![CDATA[user01@james.local]]></activiti:string>
         </activiti:field>
         <activiti:field name="subject">
           <activiti:string><![CDATA[请假申请已审批通过]]></activiti:string>
