@@ -31,6 +31,7 @@
     <module>activitistudy-chapter7-spring</module>
     <module>activitistudy-chapter7-springboot</module>
     <module>activitistudy-chapter8-mail</module>
+    <module>activitistudy-chapter9-muti-instance</module>
   </modules>
 
 	<build>
