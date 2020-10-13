@@ -33,6 +33,7 @@
     <module>activitistudy-chapter8-mail</module>
     <module>activitistudy-chapter9-muti-instance</module>
     <module>activitistudy-chapter10-subprocess-callactivity</module>
+    <module>activitistudy-chapter12-task-attachment</module>
   </modules>
 
 	<build>
