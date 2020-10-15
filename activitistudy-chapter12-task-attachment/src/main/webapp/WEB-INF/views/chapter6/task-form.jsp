@@ -167,12 +167,12 @@
 					<c:set var="type" value="" />
 					<c:choose>
 						<c:when test="${link.type == 'candidate'}"><c:set var="type" value="候选${not empty link.userId ? '人' : '组'}" /></c:when>
-						<c:when test="${link.type == '1'}"><c:set var="type" value="贡献人（参与人）" /></c:when>
-						<c:when test="${link.type == '2'}"><c:set var="type" value="项目经理（参与人）" /></c:when>
-						<c:when test="${link.type == '3'}"><c:set var="type" value="总经理（参与人）" /></c:when>
-						<c:when test="${link.type == '4'}"><c:set var="type" value="业务顾问（参与人）" /></c:when>
-						<c:when test="${link.type == '5'}"><c:set var="type" value="技术顾问（参与人）" /></c:when>
-						<c:when test="${link.type == '6'}"><c:set var="type" value="执行人（参与人）" /></c:when>
+						<c:when test="${link.type == '11'}"><c:set var="type" value="贡献人（参与人）" /></c:when>
+						<c:when test="${link.type == '12'}"><c:set var="type" value="项目经理（参与人）" /></c:when>
+						<c:when test="${link.type == '13'}"><c:set var="type" value="总经理（参与人）" /></c:when>
+						<c:when test="${link.type == '14'}"><c:set var="type" value="业务顾问（参与人）" /></c:when>
+						<c:when test="${link.type == '15'}"><c:set var="type" value="技术顾问（参与人）" /></c:when>
+						<c:when test="${link.type == '16'}"><c:set var="type" value="执行人（参与人）" /></c:when>
 					</c:choose>
 					<c:if test="${not empty type}">
 						<li>
@@ -364,12 +364,12 @@
 	    			</td>
 	    			<td>
 	    				<select class="link-type" style="width: 100px;">
-    						<option value="1">贡献人</option>
-	    					<option value="2">项目经理</option>
-	    					<option value="3">总经理</option>
-	    					<option value="4">业务顾问</option>
-	    					<option value="5">技术顾问</option>
-	    					<option value="6">执行人</option>
+    						<option value="11">贡献人</option>
+	    					<option value="12">项目经理</option>
+	    					<option value="13">总经理</option>
+	    					<option value="14">业务顾问</option>
+	    					<option value="15">技术顾问</option>
+	    					<option value="16">执行人</option>
 	    				</select>
 	    			</td>
 	    			<td>
