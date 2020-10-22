@@ -34,6 +34,7 @@
     <module>activitistudy-chapter9-muti-instance</module>
     <module>activitistudy-chapter10-subprocess-callactivity</module>
     <module>activitistudy-chapter12-task-attachment</module>
+    <module>activitistudy-chapter13-query</module>
   </modules>
 
 	<build>
