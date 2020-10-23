@@ -64,7 +64,14 @@ public class ExecutionController {
         int[] pageParams = PageUtil.init(page, request);
         NativeExecutionQuery nativeExecutionQuery = runtimeService.createNativeExecutionQuery();
 
-        // native query
+		/*
+		 * native query 将ACT_RU_EXECUTION和ACT_HI_TASKINST做关联
+		 *     在ACT_RU_EXECUTION中查询所有处于活动状态的流程实例（其中也可能是执行实例，因为有可能是有子流程或调用活动）
+		 *     这种情况下父流程实例的act_id是空的且is_active=false，而相应子流程或调用活动的act_id不为空且 is_active=true。
+		 *     然后根据PROC_INST_ID将两表关联。Proc_inst_id这个字段代表着当前主流程实例，Execution_id代表执行实例，
+		 *     如果没有子流程或调用活动这两者的值是一样的，这两个值是一对多的关系。在ACT_RU_EXECUTION和ACT_HI_TASKINST
+		 *     两个表中都有这两个字段，可以统一查询某一流程实例的所有执行实例和活动。
+		 */
         String sql = "select RES.* from ACT_RU_EXECUTION RES left join ACT_HI_TASKINST ART on ART.PROC_INST_ID_ = RES.PROC_INST_ID_ "
                 + " where ART.ASSIGNEE_ = #{userId} and ACT_ID_ is not null and IS_ACTIVE_ = 'TRUE' order by START_TIME_ desc";
 
@@ -79,6 +86,8 @@ public class ExecutionController {
         Map<String, Task> taskMap = new HashMap<String, Task>();
 
         // 每个Execution的当前活动ID，可能为多个
+        //每一个Execution可能对应多个活动ID。 流程实例和执行实例是一对多的关系，执行实例和活动ID也是一对多的关系。
+        //活动ID指的是流程定义中定义的活动ID，但是一条Execution只对应一个act_id
         Map<String, List<String>> currentActivityMap = new HashMap<String, List<String>>();
 
         // 设置每个Execution对象的当前活动节点
@@ -93,13 +102,16 @@ public class ExecutionController {
             // 查询当前流程的所有处于活动状态的活动ID，如果并行的活动则会有多个
             List<String> activeActivityIds = runtimeService.getActiveActivityIds(execution.getId());
             currentActivityMap.put(execution.getId(), activeActivityIds);
-
+            
+            //根据活动ID查询对应的TASK
             for (String activityId : activeActivityIds) {
 
-                // 查询处于活动状态的任务
+                //根据活动ID及执行实例ID，查询处于活动状态的任务
                 Task task = taskService.createTaskQuery().taskDefinitionKey(activityId).executionId(execution.getId()).singleResult();
 
-                // 调用活动
+                // 调用活动。根据调用活动的数据结构，在Execution表中会有三条记录，通过上面的语句查询到在只是处于中间的那条
+                //也就是主流程调用调用活动时自动创建的那条记录，通过它是查不到对应的任务的，因为具体的任务是由调用活动中的任务定义
+                //产生的。需要根据super_exec来查询对调用活动对应的流程实例，然后根据流程实例查询到任务
                 if (task == null) {
                     ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
                             .superProcessInstanceId(processInstanceId).singleResult();

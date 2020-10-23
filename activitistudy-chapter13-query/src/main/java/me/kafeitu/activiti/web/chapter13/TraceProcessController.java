@@ -199,11 +199,12 @@ public class TraceProcessController {
             ActivityBehavior activityBehavior = activity.getActivityBehavior();
 
             boolean currentActiviti = false;
-            // 当前节点
+            //设置为当前节点
             String activityId = activity.getId();
             if (activeActivityIds.contains(activityId)) {
                 currentActiviti = true;
             }
+            //封装节点的信息，X、Y坐标、变量信息、任务类型、任务描述
             Map<String, Object> activityImageInfo = packageSingleActivitiInfo(activity, executionEntity.getId(), currentActiviti);
             activityInfos.add(activityImageInfo);
 

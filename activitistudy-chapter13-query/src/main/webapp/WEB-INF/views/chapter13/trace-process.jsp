@@ -20,14 +20,14 @@
 </head>
 <body>${activeActivities}
     <%-- 先读取图片再通过Javascript定位 --%>
-    <div>
+    <%-- <div>
         <img id="processDiagram" src="${ctx }/chapter5/read-resource?pdid=${historicProcessInstance.processDefinitionId}&resourceName=${processDefinition.diagramResourceName}" />
-    </div>
+    </div> --%>
 
-    <%-- 通过引擎自动生成图片并用红色边框标注
+    <%-- 通过引擎自动生成图片并用红色边框标注--%>
     <div>
         <img id="processDiagramAuto" src="${ctx }/chapter13/process/trace/data/auto/${historicProcessInstance.processInstanceId}" />
-    </div>--%>
+    </div>
     <hr>
     <fieldset>
         <legend>流程综合信息-【${processDefinition.name}】<button id="changeToAutoDiagram" class="btn btn-info">坐标错位请点击这里</button></legend>

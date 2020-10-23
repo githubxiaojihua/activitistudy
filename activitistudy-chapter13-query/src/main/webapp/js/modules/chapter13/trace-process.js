@@ -40,6 +40,7 @@ function showActivities() {
         var diagramPositon = $('#processDiagram').position();
         var varsArray = new Array();
         $.each(infos, function (i, v) {
+			// 节点属性div
             var $positionDiv = $('<div/>', {
                 'class': 'activity-attr'
             }).css({
@@ -52,7 +53,7 @@ function showActivities() {
                     opacity: 0
                 });
 
-            // 节点边框
+            // 节点边框div
             var $border = $('<div/>', {
                 'class': 'activity-attr-border'
             }).css({
