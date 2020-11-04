@@ -35,6 +35,7 @@
     <module>activitistudy-chapter10-subprocess-callactivity</module>
     <module>activitistudy-chapter12-task-attachment</module>
     <module>activitistudy-chapter13-query</module>
+    <module>activitistudy-chapter14-management</module>
   </modules>
 
 	<build>
