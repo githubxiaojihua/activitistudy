@@ -36,7 +36,12 @@
     <module>activitistudy-chapter12-task-attachment</module>
     <module>activitistudy-chapter13-query</module>
     <module>activitistudy-chapter14-management</module>
-  </modules>
+    <module>activitistudy-chapter17-jpa</module>
+    <module>activitistudy-chapter18-esb</module>
+    <module>activitistudy-chapter19-identity</module>
+    <module>activitistudy-web-test</module>
+    <module>activitistudy-web-test1</module>
+	</modules>
 
 	<build>
 		<finalName>${project.artifactId}</finalName>

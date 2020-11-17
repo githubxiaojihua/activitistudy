@@ -52,6 +52,13 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>2.0</version>
+			<scope>provided</scope>
+		</dependency>
+
 		<!-- jetty -->
 		<dependency>
 			<groupId>org.eclipse.jetty.aggregate</groupId>
@@ -125,9 +132,7 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<!-- 设置目标文件的名称，默认为groupid+atifitctID+version
-		      打包的文件名会与此处一致。并不影响在下面tomcat7的访问路径，下面的访问路径是/
-		 -->
+		<!-- 设置目标文件的名称，默认为groupid+atifitctID+version 打包的文件名会与此处一致。并不影响在下面tomcat7的访问路径，下面的访问路径是/ -->
 		<finalName>activitistudy-oa-form</finalName>
 		<plugins>
 			<!-- 配置Tomcat插件 -->
@@ -144,8 +149,8 @@
 			</plugin>
 		</plugins>
 	</build>
-	
-	
+
+
 	<!-- 初始化数据 -->
 	<profiles>
 		<profile>
@@ -158,21 +163,31 @@
 						<version>1.7</version>
 						<configuration>
 							<target>
-								<property file="src/main/resources/application.properties" />
+								<property
+									file="src/main/resources/application.properties" />
 								<property name="sql.type" value="${sql.type}" />
-								<property name="dbunit.datatype" value="org.dbunit.ext.h2.H2DataTypeFactory" />
+								<property name="dbunit.datatype"
+									value="org.dbunit.ext.h2.H2DataTypeFactory" />
 
-								<taskdef name="dbunit" classname="org.dbunit.ant.DbUnitTask" classpathref="maven.runtime.classpath" />
+								<taskdef name="dbunit"
+									classname="org.dbunit.ant.DbUnitTask"
+									classpathref="maven.runtime.classpath" />
 
-								<java classname="com.xiaojihua.activiti.chapter6.util.InitEngineeDatabase" classpathref="maven.runtime.classpath" />
+								<java
+									classname="com.xiaojihua.activiti.chapter6.util.InitEngineeDatabase"
+									classpathref="maven.runtime.classpath" />
 
 								<!-- add init datas -->
-								<dbunit driver="${jdbc.driver}" url="${jdbc.url}" userid="${jdbc.username}" password="${jdbc.password}">
+								<dbunit driver="${jdbc.driver}" url="${jdbc.url}"
+									userid="${jdbc.username}" password="${jdbc.password}">
 									<dbconfig>
-										<property name="datatypeFactory" value="${dbunit.datatype}" />
+										<property name="datatypeFactory"
+											value="${dbunit.datatype}" />
 									</dbconfig>
 									<classpath refid="maven.runtime.classpath" />
-									<operation type="CLEAN_INSERT" src="src/main/resources/data/identity-data.xml" format="flat" transaction="true" />
+									<operation type="CLEAN_INSERT"
+										src="src/main/resources/data/identity-data.xml" format="flat"
+										transaction="true" />
 								</dbunit>
 							</target>
 						</configuration>
